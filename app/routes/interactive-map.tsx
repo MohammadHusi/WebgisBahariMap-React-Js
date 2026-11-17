@@ -13,10 +13,11 @@ export default function InteractiveMap() {
   const [selectedKecamatan, setSelectedKecamatan] = useState<string>("Semua");
   const [selectedKategori, setSelectedKategori] = useState<string>("Semua");
 
-  const [selectedDestinasi, setSelectedDestinasi] = useState<DestinasiWisata | null>(destinasiList[0]);
+  const [selectedDestinasi, setSelectedDestinasi] = useState<DestinasiWisata | null>(null);
   const [selectedUsulan, setSelectedUsulan] = useState<UsulanPotensiWisata | null>(null);
 
   const [showLayerPanel, setShowLayerPanel] = useState(false);
+  const [mobileTab, setMobileTab] = useState<"map" | "list">("map");
 
   // Leaflet map refs
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -282,15 +283,63 @@ export default function InteractiveMap() {
   const handleSelectFromSidebar = (item: DestinasiWisata) => {
     setSelectedDestinasi(item);
     setSelectedUsulan(null);
+    setMobileTab("map"); // Automatically switch to map view on mobile
     if (mapInstanceRef.current) {
       mapInstanceRef.current.setView([item.latitude, item.longitude], 13, { animate: true });
     }
   };
 
   return (
-    <div className="relative w-full h-[calc(100vh-4rem)] flex overflow-hidden bg-[#eaf4fb] select-none">
+    <div className="relative w-full h-[calc(100vh-4rem)] flex flex-col md:flex-row overflow-hidden bg-[#eaf4fb] select-none">
+      {/* MOBILE BOTTOM/TOP SWITCHER BAR */}
+      <div className="md:hidden z-30 bg-[#fdf9f0] border-b border-[#e6e2d9] px-3 py-2 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-1 bg-[#ece8df] p-1 rounded-xl">
+          <button
+            onClick={() => setMobileTab("map")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              mobileTab === "map"
+                ? "bg-[#083d5c] text-white shadow-xs"
+                : "text-[#42474d] hover:text-[#1c1c16]"
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">map</span>
+            <span>Peta GIS</span>
+          </button>
+          <button
+            onClick={() => setMobileTab("list")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              mobileTab === "list"
+                ? "bg-[#083d5c] text-white shadow-xs"
+                : "text-[#42474d] hover:text-[#1c1c16]"
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">format_list_bulleted</span>
+            <span>Daftar Objek ({filteredDestinasi.length})</span>
+          </button>
+        </div>
+
+        <button
+          onClick={() => {
+            setMobileTab("map");
+            setShowLayerPanel(!showLayerPanel);
+          }}
+          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-xs font-semibold ${
+            showLayerPanel
+              ? "bg-[#1a6392] text-white border-[#1a6392]"
+              : "bg-[#f7f3ea] text-[#00273e] border-[#e6e2d9]"
+          }`}
+        >
+          <span className="material-symbols-outlined text-[16px]">layers</span>
+          <span>Layer</span>
+        </button>
+      </div>
+
       {/* LEFT SIDEBAR: PAMEKASAN EXPLORER & FILTERS */}
-      <div className="w-80 md:w-96 bg-[#fdf9f0]/95 backdrop-blur-md border-r border-[#e6e2d9] flex flex-col z-20 shadow-xl shrink-0 transition-all">
+      <div
+        className={`${
+          mobileTab === "list" ? "flex" : "hidden"
+        } md:flex w-full md:w-96 bg-[#fdf9f0]/95 backdrop-blur-md border-r border-[#e6e2d9] flex-col z-20 shadow-xl shrink-0 h-full overflow-hidden transition-all`}
+      >
         {/* Header Search & Scope */}
         <div className="p-4 border-b border-[#e6e2d9] space-y-3">
           <div className="flex items-center justify-between">
@@ -417,25 +466,25 @@ export default function InteractiveMap() {
       {/* CENTER: LEAFLET OPENSTREETMAP / ESRI WEBGIS CONTAINER */}
       <div className="flex-1 relative h-full flex flex-col overflow-hidden">
         {/* Floating Top Control Bar */}
-        <div className="absolute top-4 left-4 right-4 z-10 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
+        <div className="absolute top-3 left-3 right-3 md:top-4 md:left-4 md:right-4 z-10 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
           {/* Basemap Switcher */}
-          <div className="flex items-center gap-1 p-1 bg-[#fdf9f0]/95 backdrop-blur-md rounded-xl border border-[#e6e2d9] shadow-md pointer-events-auto">
+          <div className="flex items-center gap-1 p-1 bg-[#fdf9f0]/95 backdrop-blur-md rounded-xl border border-[#e6e2d9] shadow-md pointer-events-auto overflow-x-auto max-w-full">
             {(["osm", "satellite", "ocean"] as const).map((mode) => (
               <button
                 key={mode}
                 onClick={() => setBasemap(mode)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
+                className={`px-2.5 py-1 md:px-3 md:py-1.5 rounded-lg text-[11px] md:text-xs font-semibold capitalize whitespace-nowrap transition-all ${
                   basemap === mode
                     ? "bg-[#083d5c] text-white shadow-sm"
                     : "text-[#42474d] hover:text-[#1c1c16] hover:bg-[#ece8df]"
                 }`}
               >
-                {mode === "osm" ? "Peta Standar (OSM)" : mode === "satellite" ? "Citra Satelit" : "Peta Laut (Ocean)"}
+                {mode === "osm" ? "OSM" : mode === "satellite" ? "Satelit" : "Laut"}
               </button>
             ))}
           </div>
 
-          {/* Quick Stats Pill */}
+          {/* Quick Stats Pill (Desktop Only) */}
           <div className="hidden lg:flex items-center gap-4 px-4 py-2 bg-[#fdf9f0]/95 backdrop-blur-md rounded-xl border border-[#e6e2d9] shadow-md pointer-events-auto text-xs">
             <div className="flex items-center gap-2">
               <span className="text-[#42474d]">Wilayah:</span>
@@ -448,8 +497,8 @@ export default function InteractiveMap() {
             </div>
           </div>
 
-          {/* Layer Toggle Button */}
-          <div className="flex items-center gap-2 pointer-events-auto">
+          {/* Layer Toggle Button (Desktop Only, mobile has header button) */}
+          <div className="hidden md:flex items-center gap-2 pointer-events-auto">
             <button
               onClick={() => setShowLayerPanel(!showLayerPanel)}
               className="px-3.5 py-2 bg-[#fdf9f0]/95 backdrop-blur-md hover:bg-[#ece8df] text-[#00273e] border border-[#e6e2d9] rounded-xl text-xs font-semibold flex items-center gap-2 shadow-md transition-all"
@@ -465,7 +514,7 @@ export default function InteractiveMap() {
 
         {/* BOTTOM / RIGHT OVERLAY: DETAIL KARTU POTENSI EKONOMI */}
         {selectedDestinasi && (
-          <div className="absolute bottom-4 right-4 max-w-md w-full bg-[#fdf9f0]/95 backdrop-blur-xl border border-[#e6e2d9] rounded-2xl shadow-2xl p-5 z-20 text-[#1c1c16] animate-in fade-in slide-in-from-bottom-4 duration-200">
+          <div className="absolute bottom-2 left-2 right-2 md:bottom-4 md:right-4 md:left-auto md:max-w-md bg-[#fdf9f0]/95 backdrop-blur-xl border border-[#e6e2d9] rounded-2xl shadow-2xl p-4 md:p-5 z-20 text-[#1c1c16] max-h-[75vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-200">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
@@ -554,7 +603,7 @@ export default function InteractiveMap() {
 
         {/* BOTTOM / RIGHT OVERLAY: USULAN BARU DETAIL */}
         {selectedUsulan && (
-          <div className="absolute bottom-4 right-4 max-w-md w-full bg-[#fdf9f0]/95 backdrop-blur-xl border border-purple-200 rounded-2xl shadow-2xl p-5 z-20 text-[#1c1c16] animate-in fade-in duration-200">
+          <div className="absolute bottom-2 left-2 right-2 md:bottom-4 md:right-4 md:left-auto md:max-w-md bg-[#fdf9f0]/95 backdrop-blur-xl border border-purple-200 rounded-2xl shadow-2xl p-4 md:p-5 z-20 text-[#1c1c16] max-h-[75vh] overflow-y-auto animate-in fade-in duration-200">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-purple-100 text-purple-700">
@@ -601,7 +650,7 @@ export default function InteractiveMap() {
 
         {/* FLOATING GIS LAYER CONTROLS */}
         {showLayerPanel && (
-          <div className="absolute top-20 right-4 w-72 bg-[#fdf9f0]/95 backdrop-blur-xl border border-[#e6e2d9] rounded-2xl p-4 shadow-xl z-20 text-[#1c1c16] space-y-3">
+          <div className="absolute top-14 left-2 right-2 md:top-20 md:right-4 md:left-auto md:w-72 bg-[#fdf9f0]/95 backdrop-blur-xl border border-[#e6e2d9] rounded-2xl p-4 shadow-xl z-20 text-[#1c1c16] space-y-3">
             <div className="flex items-center justify-between border-b border-[#e6e2d9] pb-2">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#1a6392] text-lg">layers</span>
@@ -611,7 +660,7 @@ export default function InteractiveMap() {
               </div>
               <button
                 onClick={() => setShowLayerPanel(false)}
-                className="text-[#42474d] hover:text-[#1c1c16] text-xs"
+                className="text-[#42474d] hover:text-[#1c1c16] text-xs font-semibold px-2 py-0.5 rounded hover:bg-[#ece8df]"
               >
                 Tutup
               </button>
