@@ -6,7 +6,9 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "predeploy": "npm run build && cp build/client/index.html build/client/404.html && touch build/client/.nojekyll",
+    "deploy": "gh-pages -d build/client -t"
   },
   "dependencies": {
     "@react-router/node": "^8.5.1",
@@ -24,6 +26,7 @@
     "@types/node": "^22",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
+    "gh-pages": "^6.3.0",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vite": "^8.0.3"

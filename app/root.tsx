@@ -58,6 +58,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+export function HydrateFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-10 h-10 border-4 border-[#0284c7] border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-sm text-[#525252] font-medium">Memuat BahariMap...</p>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   return <Outlet />;
 }
