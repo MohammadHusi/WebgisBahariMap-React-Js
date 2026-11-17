@@ -1,15 +1,64 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-primary: #00273e;
+  --color-primary-container: #083d5c;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #7ea8cc;
+  --color-secondary: #1a6392;
+  --color-secondary-container: #8dcafe;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #005582;
+  --color-tertiary: #002928;
+  --color-tertiary-container: #00413f;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #38b4af;
+  --color-tertiary-fixed: #82f5ef;
+  --color-surface: #fdf9f0;
+  --color-surface-container: #f1eee5;
+  --color-surface-container-low: #f7f3ea;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #ece8df;
+  --color-surface-container-highest: #e6e2d9;
+  --color-on-surface: #1c1c16;
+  --color-on-surface-variant: #42474d;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
   }
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbars and styling */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

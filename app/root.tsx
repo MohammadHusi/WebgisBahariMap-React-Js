@@ -9,6 +9,8 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { Header, Footer } from "./components/Header";
+import { AppProvider } from "./context/AppContext";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -19,21 +21,36 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+  },
+  {
+    rel: "stylesheet",
+    href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200",
+  },
+  {
+    rel: "stylesheet",
+    href: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+    integrity: "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=",
+    crossOrigin: "anonymous",
   },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="id">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>BahariMap Pamekasan - WebGIS Potensi Pariwisata Bahari & Ekonomi</title>
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="bg-[#fdf9f0] text-[#1c1c16] antialiased min-h-screen flex flex-col font-sans">
+        <AppProvider>
+          <Header />
+          <main className="flex-1 w-full pt-16 flex flex-col">{children}</main>
+          <Footer />
+        </AppProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -46,30 +63,18 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
+  let message = "Terjadi Kesalahan";
+  let details = "Halaman tidak dapat dimuat.";
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
+    message = error.status === 404 ? "404 - Halaman Tidak Ditemukan" : "Kesalahan Sistem";
+    details = error.status === 404 ? "Halaman yang Anda tuju tidak ditemukan." : details;
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
+    <div className="max-w-md mx-auto my-16 p-6 bg-white rounded-xl border border-[#e6e2d9] text-center text-[#1c1c16] shadow-sm">
+      <h1 className="text-xl font-bold">{message}</h1>
+      <p className="text-sm text-[#42474d] mt-2">{details}</p>
+    </div>
   );
 }

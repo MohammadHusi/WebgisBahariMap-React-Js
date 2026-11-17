@@ -1,87 +1,43 @@
-# Welcome to React Router!
+# BahariMap Pamekasan (WebGIS)
 
-A modern, production-ready template for building full-stack React applications using React Router.
+**Perancangan & Manajemen Sistem Informasi Geospasial (WebGIS) untuk Pemetaan dan Optimasi Potensi Ekonomi Pariwisata Bahari Kabupaten Pamekasan**
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
-
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+Platform WebGIS terintegrasi yang dirancang untuk mendukung penelitian, perencanaan daerah, pemetaan spasial objek pariwisata bahari, serta optimasi klaster ekonomi UMKM pesisir (kuliner laut, industri garam rakyat, batik pesisir, dan ekowisata mangrove) di Kabupaten Pamekasan, Madura, Jawa Timur.
 
 ---
 
-Built with ❤️ using React Router.
+## 🌟 Fitur & Modul Utama
+
+1. **Peta Geospasial Interaktif Pesisir Pamekasan (`/`)**
+   - Menampilkan bentang spasial perairan Selat Madura (selatan) dan Laut Jawa (pantura).
+   - Layer tematik: Destinasi Bahari Unggulan, Sentra UMKM Pesisir, Kawasan Garam Rakyat (KIGR Galis & Pademawu), Sabuk Mangrove, dan Koridor Wisata.
+   - Panel detail kartu potensi ekonomi untuk tiap objek wisata (estimasi perputaran uang, kunjungan bulanan, jumlah UMKM terhubung, dan tenaga kerja).
+
+2. **Formulir Usul Potensi Baru Pokdarwis & Warga (`/usul-potensi`)**
+   - Fasilitas *participatory GIS* bagi Kelompok Sadar Wisata (Pokdarwis) dan warga untuk mengajukan calon destinasi bahari baru dengan geolokasi GPS presisi.
+
+3. **Panel Telaah Bappeda & Disporapar (`/telaah-bappeda`)**
+   - Dasbor penelaahan usulan warga bagi dinas teknis pemerintah daerah (Bappeda/Dinas Pariwisata) untuk validasi kelayakan dan penjadwalan survei lapangan.
+
+4. **Analisis & Nilai Ekonomi Spasial (`/analisis-ekonomi`)**
+   - Agregasi data perputaran ekonomi, kunjungan per kecamatan (Tlanakan, Pademawu, Galis, Pasean), dan rekomendasi tata ruang berbasis GIS.
+
+5. **Katalog Data Spasial Open Data (`/katalog-data-spasial`)**
+   - Ekspor dataset standar GeoJSON (EPSG:4326 WGS 84) untuk kebutuhan analisis lanjutan di software GIS (QGIS, ArcGIS).
+
+---
+
+## 🚀 Cara Menjalankan
+
+```bash
+# Install dependencies
+npm install
+
+# Jalankan server development
+npm run dev
+
+# Jalankan typecheck & build production
+npm run typecheck
+npm run build
+npm start
+```
